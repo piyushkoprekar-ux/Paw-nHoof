@@ -454,69 +454,124 @@
             transform: scale(1.1) rotate(10deg);
         }
 
-        /* --- 6. FOOTER (Wave Design from Style.css) --- */
-        .footer-wrapper {
-            background: var(--deep-green);
+
+ .footer-wrapper {
+           background: var(--deep-green);
             margin-top: 50px;
             position: relative;
             color: var(--pastel-cream);
             padding-bottom: 20px;
         }
 
-        .wave-divider {
-            position: absolute;
-            top: -100px;
-            left: 0;
-            width: 100%;
-            line-height: 0;
-            pointer-events: none;
+        .wave-divider { position: absolute; top: -100px; left: 0; width: 100%; line-height: 0; pointer-events: none; }
+        .wave-divider svg { width: 100%; height: 100px; display: block; fill: var(--deep-green); }
+
+        footer {
+            padding: 40px 8% 20px 8%;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
         }
 
-        .wave-divider svg {
-            width: 100%;
-            height: 100px;
-            display: block;
-            fill: var(--deep-green);
+        /* Top Section: Branding + Links Side-by-Side */
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+             background: var(--deep-green);
+            color: var(--light-bg);
+            gap: 40px;
         }
 
-        .footer-content {
-            padding: 40px 10%;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
+        /* Branding Section */
+        .footer-brand {
+            flex: 1;
+            min-width: 300px;
         }
-
-        .footer-logo h2 {
-            font-family: 'Caveat', cursive;
+        .footer-brand-box {
+            display: flex; align-items: center; gap: 15px; margin-bottom: 20px;
+        }
+        .footer-logo-big {
+            height: 60px; width: 60px; border-radius: 50%; border: 2px solid var(--light-green-text); object-fit: cover;
+        }
+        .footer-brand-text {
+              font-family: 'Caveat', cursive;
+            font-weight: 800;
+            text-transform: capitalize;
             font-size: 3rem;
             color: var(--pastel-yellow);
         }
+        .footer-brand-text:hover { color: var(--pastel-pink); transform: translateY(-3px); transition: 0.3s;  }
 
-        .footer-links ul {
-            list-style: none;
+        .social-icons { 
+            display: flex; gap: 15px; margin-top: 20px;
         }
+        .social-icons i {
+            font-size: 1.5rem; cursor: pointer; transition: 0.3s;   color: #00271e; /* Requested Light Green Color */
+        }
+        .social-icons i:hover { color: var(--accent); transform: translateY(-3px); }
 
-        .footer-links li {
-            margin: 10px 0;
-            font-family: 'Patrick Hand', cursive;
+ /* Links Side-by-Side Container */
+        .footer-links-container {
+            display: flex;
+            gap: 60px;
+        }
+        
+        .footer-col h4 {
             font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            
+        }
+
+        .footer-links { list-style: none; }
+        .footer-links li {
+            margin-bottom: 10px;
+              font-family: 'Patrick Hand', cursive;
+            font-size: 0.95rem;
             cursor: pointer;
+            transition: 0.3s;
+            display: flex; align-items: center; gap: 8px;
         }
-
         .footer-links li:hover {
-            color: var(--accent-color);
-            text-decoration: underline;
+            color: var(--accent);
+            transform: translateX(5px);
         }
 
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .hero { flex-direction: column-reverse; text-align: center; padding-top: 150px; }
-            .hero-visual { width: 300px; height: 300px; margin-bottom: 30px; }
-            .feed-layout { grid-template-columns: 1fr; }
-            .footer-content { grid-template-columns: 1fr; text-align: center; }
-            nav { width: 95%; left: 2.5%; padding: 10px 15px; }
-            .nav-links { display: none; } /* Hide links on mobile for simplicity */
+        /* Bottom Section Text */
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            line-height: 1.6;
         }
+        .highlight-text {
+            color: var(--light-green-text);
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            nav { flex-direction: column; height: auto; padding: 20px; border-radius: 20px; width: 95%; }
+            .nav-left-group { flex-direction: column; gap: 10px; width: 100%; }
+            .nav-items { flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px; }
+            .hero h1 { font-size: 2.2rem; }
+            .footer-top { flex-direction: column; }
+            .footer-links-container { flex-wrap: wrap; gap: 30px; width: 100%; }
+            .newsletter { width: 90%; }
+            .nav-search input { width: 100%; }
+        }
+
+
+
+
+
+
+    
 
     </style>
 </head>
@@ -734,27 +789,72 @@
         </div>
     </div>
 
+    <!-- RESTRUCTURED FOOTER -->
     <div class="footer-wrapper">
+    
         <div class="wave-divider">
-                      <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
                 <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" class="shape-fill"></path>
             </svg>
         </div>
-        <div class="footer-content">
-            <div class="footer-logo">
-                <h2>Paw'nHoof</h2>
-                <p>Connecting hearts with paws and hooves.<br>Designed by Ayush Harinkhede.</p>
+
+        <footer>
+            <div class="footer-top">
+                <!-- Brand & Socials -->
+                <div class="footer-brand">
+                    <div class="footer-brand-box">
+<!-- <img src="LOGO.png" alt="Logo" class="logo-img"> -->
+                        <h2 class="footer-brand-text">Paw'nHoof..</h2><br>
+                        <h4><b><i> </i></b></h4>
+                    </div>
+                    
+                    <!-- Social Icons (Added GitHub & Facebook) -->
+                    <div class="social-icons">
+                        <i class="fab fa-instagram"></i>
+                        <i class="fab fa-twitter"></i>
+                        <i class="fab fa-youtube"></i>
+                        <i class="fab fa-facebook"></i> <!-- Added -->
+                        <i class="fab fa-github"></i>   <!-- Added -->
+                    </div>
+                </div>
+
+                <!-- Links Side by Side -->
+                <div class="footer-links-container">
+
+                    
+                    <div class="footer-col">
+                        <h4>Support</h4>
+                        <ul class="footer-links">
+                            <li><i class="fas fa-user-plus"></i> My Account</li>
+                            <li><i class="fas fa-box-open"></i> Donate Now</li>
+                              <li><i class="fas fa-envelope"></i>Feed Now </li>
+                            <li><i class="fas fa-phone-alt"></i> Contact: 9209514158</li>
+                          
+                        </ul>
+                    </div>
+
+              <div class="footer-col">
+                        <h4>Quick Links</h4>
+                        <ul class="footer-links">
+              <li><i class="fas fa-chevron-left" style="font-size: 0.7rem;"></i> Privacy Policy</li>
+                 <li><i class="fas fa-chevron-left" style="font-size: 0.7rem;"></i> Terms & Conditions</li>
+                 <li><i class="fas fa-chevron-left" style="font-size: 0.7rem;"></i> Rights & Reserves</li>
+                 <li><i class="fas fa-chevron-left" style="font-size: 0.7rem;"></i> Accessibility Statement</li>
+                        </ul>
+                    </div>
+
+
+                </div>   </div>
+
+            <!-- Bottom Content (Moved Here) --> 
+            <div class="footer-bottom">
+                <p><b><i>Empowering lives through technology and support since 2025.</i></b></p>
+                <p class="highlight-text"><b><i> Designed with ❤️ for the community</i></b>.</p>
+                <p><b>I think You should know about that<br><i> It's a propt Website and thats why it's not provide any type of real serive or help...</i></b></p>
+
             </div>
-            <div class="footer-links">
-                <ul>
-                    <li>Privacy Policy</li>
-                    <li>Terms of Service</li>
-                    <li>Contact Support</li>
-                    <li>Donate Now</li>
-                </ul>
-            </div>
-        </div>
-    </div>
+        </footer>
+       
     
     <script>
         // --- FLOATING TOOLS LOGIC ---
