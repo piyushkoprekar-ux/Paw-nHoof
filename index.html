@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style src="App.css"></style>
 
     <title>Paw'nHoof - Adopt & Feed</title>
     <style>
@@ -21,7 +22,7 @@
             
             /* Darker Shades for Text */
             --text-dark: #4a4a4a;
-            --deep-green: #2d4a3e;
+            --deep-green: #2d304a;
             --accent-color: #ff8e88; /* Soft Red/Pink for hearts */
             
             /* Glassmorphism */
@@ -111,6 +112,9 @@
 
         .nav-links a:hover {
             color: var(--accent-color);
+             transform: scale(1.35);
+                transition: transform 0.2s;
+                gap: 15px;
         }
 
         .account-btn {
@@ -126,6 +130,10 @@
 
         .account-btn:hover {
             transform: scale(1.05);
+            color: var(--accent-color);
+              transition: transform 0.2s;
+
+            
         }
 
         /* --- 2. HERO SECTION (Symmetrical Layout) --- */
@@ -143,6 +151,13 @@
             z-index: 2;
         }
 
+        .hero-text :hover{
+            color: var(--accent-color);
+           transform: scale(1.05);
+              transition: transform 0.5s;
+
+        }
+
         .hero-text h1 {
             font-family: 'Caveat', cursive;
             font-size: 4rem;
@@ -151,11 +166,21 @@
             margin-bottom: 20px;
         }
 
+         .hero-text h1 :hover{
+            color: var(--accent-color);
+           transform: scale(1.05);
+         }
+
         .hero-text p {
             font-family: 'Indie Flower', cursive;
             font-size: 1.5rem;
             margin-bottom: 30px;
         }
+
+           .hero-text p ;:hover{
+            color: var(--accent-color);
+           transform: scale(1.05);
+           }
 
         .hero-visual {
             position: relative;
@@ -343,6 +368,7 @@
 
         .pet-card:hover {
             transform: translateY(-10px);
+            background-color:rgb(251, 248, 242); 
         }
 
         .pet-img-box {
@@ -409,6 +435,8 @@
 
         .btn-adopt:hover {
             background: var(--accent-color);
+              transform: scale(1.05);
+           
         }
 
         .btn-heart {
@@ -502,7 +530,7 @@
             font-size: 3rem;
             color: var(--pastel-yellow);
         }
-        .footer-brand-text:hover { color: var(--pastel-pink); transform: translateY(-3px); transition: 0.3s;  }
+        .footer-brand-text:hover { color: var(--accent-color); transform: translateY(-3px); transition: 0.3s;  }
 
         .social-icons { 
             display: flex; gap: 15px; margin-top: 20px;
@@ -510,7 +538,7 @@
         .social-icons i {
             font-size: 1.5rem; cursor: pointer; transition: 0.3s;   color: #00271e; /* Requested Light Green Color */
         }
-        .social-icons i:hover { color: var(--accent); transform: translateY(-3px); }
+        .social-icons i:hover {  color: var(--accent-color);transform: translateY(-3px); }
 
  /* Links Side-by-Side Container */
         .footer-links-container {
@@ -520,7 +548,7 @@
         
         .footer-col h4 {
             font-size: 1.2rem;
-            color: var(--accent);
+            color: var(--accent-color);
             margin-bottom: 15px;
             font-weight: 700;
             text-transform: uppercase;
@@ -531,13 +559,13 @@
         .footer-links li {
             margin-bottom: 10px;
               font-family: 'Patrick Hand', cursive;
-            font-size: 0.95rem;
+            font-size: 1rem;
             cursor: pointer;
             transition: 0.3s;
             display: flex; align-items: center; gap: 8px;
         }
         .footer-links li:hover {
-            color: var(--accent);
+            color: var(--accent-color);
             transform: translateX(5px);
         }
 
@@ -566,12 +594,6 @@
             .nav-search input { width: 100%; }
         }
 
-
-
-
-
-
-    
 
     </style>
 </head>
