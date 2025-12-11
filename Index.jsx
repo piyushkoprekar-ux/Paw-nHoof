@@ -222,7 +222,6 @@ function index() {
     
     
 
-    <!-- RESTRUCTURED FOOTER -->
     <div class="footer-wrapper">
     
         <div class="wave-divider">
@@ -236,22 +235,21 @@ function index() {
                 <!-- Brand & Socials -->
                 <div class="footer-brand">
                     <div class="footer-brand-box">
-<!-- <img src="LOGO.png" alt="Logo" class="logo-img"> -->
+ <img src="LOGO.png" alt="Logo" class="logo-img">
                         <h2 class="footer-brand-text">Paw'nHoof..</h2><br>
                         <h4><b><i> </i></b></h4>
                     </div>
                     
-                    <!-- Social Icons (Added GitHub & Facebook) -->
+                
                     <div class="social-icons">
                         <i class="fab fa-instagram"></i>
                         <i class="fab fa-twitter"></i>
                         <i class="fab fa-youtube"></i>
-                        <i class="fab fa-facebook"></i> <!-- Added -->
-                        <i class="fab fa-github"></i>   <!-- Added -->
+                        <i class="fab fa-facebook"></i> 
+                        <i class="fab fa-github"></i>  
                     </div>
                 </div>
 
-                <!-- Links Side by Side -->
                 <div class="footer-links-container">
 
                     
@@ -280,7 +278,6 @@ function index() {
                 </div>   </div>
                 
 
-            <!-- Bottom Content (Moved Here) --> 
             <div class="footer-bottom">
                 <p><b><i>Empowering lives through technology and support since 2025.</i></b></p>
                 <p class="highlight-text"><b><i> Designed with ❤️ for the community</i></b>.</p>
@@ -294,4 +291,3 @@ function index() {
   )
 }
 
-export default index
