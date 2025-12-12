@@ -21,7 +21,7 @@ const Navbar = ({ view, setView, cartCount }) => (
             className={`nav-item ${view === item.toLowerCase() ? 'active' : ''}`}
             onClick={() => setView(item.toLowerCase())}
           >
-            {item}
+            {item} 
           </div>
         ))}
       </div>
