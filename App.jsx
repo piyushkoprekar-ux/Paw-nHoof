@@ -3,7 +3,7 @@ import './App.css';
 
 import index from '/Index.jsx' 
 import index from './index.js'
-import index from './index.css'
+import index from './index.css' 
 
 // --- Components ---
 
