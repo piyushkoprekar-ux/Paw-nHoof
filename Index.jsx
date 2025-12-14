@@ -288,6 +288,32 @@ function index() {
         
     
     </>
+  
+
+import React from 'react'
+import logo from './../../public/swiggy_logo_white.png'
+
+
+function Nav() {
+  return (
+    <>
+      <div className='w-full h-25  flex items-center justify-center' >
+        <div className='w-[80%] h-20 flex items-center gap-50' >
+          <div className='w-[15%] h-full flex items-center'>
+            <img src={logo} alt="not dode"  className='w-full'/>
+            </div>
+
+          <div className=' w-[85%] h-full flex gap-16 text-white list-none items-center '>
+            <li className='font-semibold text-base font-[Gilroy]'>Swiggy Corporate</li>
+            <li className='font-semibold text-base font-[Gilroy]'>Partner with us</li>
+            <li> <button className='cursor-pointer border-2 p-3 rounded-2xl flex items-center font-extrabold'>Get the App</button></li>
+            <li><button className='cursor-pointer  p-3 rounded-2xl  bg-black w-30 font-extrabold'>Sign in</button></li>
+          </div>
+        </div>
+      </div>
+      
+    </>
   )
 }
 
+export default Nav
