@@ -18,7 +18,7 @@ const Navbar = ({ view, setView, cartCount }) => (
         {['Home', 'Feed', 'Pets', 'About'].map(item => (
           <div 
             key={item}
-            className={`nav-item ${view === item.toLowerCase() ? 'active' : ''}`}
+            className={`nav-item ${view === item.toLowerCase() ? 'active' : ''}`} 
             onClick={() => setView(item.toLowerCase())}
           >
             {item} 
