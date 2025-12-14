@@ -11,7 +11,7 @@ const Navbar = ({ view, setView, cartCount }) => (
   <nav className="navbar">
     <div className="container flex-between">
       <div className="logo" onClick={() => setView('home')}> 
-        <span className="material-icons-round">pets</span> Pawhoof
+        <span className="material-icons-round">pets</span> Pawhoof 
       </div>
       
       <div className="nav-links">
