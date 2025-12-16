@@ -230,7 +230,7 @@ function App() {
             </label>
           </div>
         </div>
-      </div>
+      </div> 
 
       {/* Auth Modal */}
       {authModalOpen && (
