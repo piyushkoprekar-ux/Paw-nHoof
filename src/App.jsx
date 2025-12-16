@@ -261,7 +261,7 @@ function App() {
                   <div>
                     <div className="form-group">
                       <label>Full Name</label>
-                      <input type="text" placeholder="Ayush Harinkhede" />
+                      <input type="text" placeholder="Entre Your Name" />
                     </div>
                     <div className="form-group">
                       <label>Email</label>
