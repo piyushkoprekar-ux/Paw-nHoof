@@ -20,8 +20,6 @@ function App() {
   const [mapExpanded, setMapExpanded] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [rememberMe, setRememberMe] = useState(false);
-  const [userLocation, setUserLocation] = useState(null);
-  const [currentTheme, setCurrentTheme] = useState('light');
   
   // Form states
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
@@ -81,27 +79,7 @@ function App() {
       { id: 24, name: 'Balram', breed: 'Gir', gender: 'Male', age: '9 years', location: 'Seminary Hills', type: 'ox', needsRescue: true, needsMedical: true, needsDonate: false, lat: 21.1389, lng: 79.0654 },
       
       // Camel
-      { id: 25, name: 'Sahara', breed: 'Bikaneri', gender: 'Male', age: '10 years', location: 'Hingna Road', type: 'camel', needsRescue: false, needsMedical: false, needsDonate: true, lat: 21.0968, lng: 78.9814 },
-
-      // Desi Dogs
-      { id: 26, name: 'Kalu', breed: 'Desi Dog', gender: 'Male', age: '2 years', location: 'Manewada', type: 'dog', needsRescue: false, needsMedical: false, needsDonate: false, lat: 21.0968, lng: 79.0290 },
-      { id: 27, name: 'Gudiya', breed: 'Desi Dog', gender: 'Female', age: '1.5 years', location: 'Bardi', type: 'dog', needsRescue: true, needsMedical: false, needsDonate: false, lat: 21.1650, lng: 79.0600 },
-
-      // Desi Cats
-      { id: 28, name: 'Chutki', breed: 'Desi Cat', gender: 'Female', age: '1 year', location: 'Jaripatka', type: 'cat', needsRescue: false, needsMedical: false, needsDonate: true, lat: 21.1800, lng: 79.0800 },
-      { id: 29, name: 'Motu', breed: 'Desi Cat', gender: 'Male', age: '3 years', location: 'Dharampeth', type: 'cat', needsRescue: true, needsMedical: true, needsDonate: false, lat: 21.1523, lng: 79.0801 },
-
-      // Desi Cows & Buffalo/Sheep
-      { id: 30, name: 'Nandini', breed: 'Desi Cow', gender: 'Female', age: '7 years', location: 'Mhalgi Nagar', type: 'cow', needsRescue: false, needsMedical: true, needsDonate: true, lat: 21.1000, lng: 79.0800 },
-      { id: 31, name: 'Bhola', breed: 'Desi Bull', gender: 'Male', age: '6 years', location: 'Hudkeshwar', type: 'ox', needsRescue: true, needsMedical: false, needsDonate: false, lat: 21.0700, lng: 79.1000 },
-
-      // Pigs
-      { id: 32, name: 'Gulabo', breed: 'Desi Pig', gender: 'Female', age: '2 years', location: 'Mankapur', type: 'pig', needsRescue: false, needsMedical: false, needsDonate: true, lat: 21.1900, lng: 79.1000 },
-      { id: 33, name: 'Lallu', breed: 'Desi Pig', gender: 'Male', age: '3 years', location: 'Sadar', type: 'pig', needsRescue: true, needsMedical: false, needsDonate: false, lat: 21.1456, lng: 79.0882 },
-
-      // Sheep
-      { id: 34, name: 'Dholu', breed: 'Desi Sheep', gender: 'Male', age: '2 years', location: 'Futala', type: 'sheep', needsRescue: false, needsMedical: false, needsDonate: false, lat: 21.1289, lng: 79.0456 },
-      { id: 35, name: 'Bhuri', breed: 'Desi Sheep', gender: 'Female', age: '1.5 years', location: 'Itwari', type: 'sheep', needsRescue: true, needsMedical: false, needsDonate: true, lat: 21.1623, lng: 79.0923 }
+      { id: 25, name: 'Sahara', breed: 'Bikaneri', gender: 'Male', age: '10 years', location: 'Hingna Road', type: 'camel', needsRescue: false, needsMedical: false, needsDonate: true, lat: 21.0968, lng: 78.9814 }
     ];
     
     // Add image URLs (using placeholder service that provides cut-out style images)
@@ -147,24 +125,10 @@ function App() {
     if (savedAdopted) {
       setAdoptedAnimals(JSON.parse(savedAdopted));
     }
-
-    const savedTheme = localStorage.getItem('pawhoof_theme') || 'light';
-    setTheme(savedTheme);
     
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const { latitude, longitude } = pos.coords;
-          setUserLocation({ lat: latitude, lng: longitude });
-          setLocationText(`Your area (${latitude.toFixed(3)}, ${longitude.toFixed(3)})`);
-        },
-        () => {
-          setLocationText('Hingna, Nagpur (MH)');
-        }
-      );
-    } else {
+    setTimeout(() => {
       setLocationText('Hingna, Nagpur (MH)');
-    }
+    }, 1500);
   }, []);
 
   const calculateAge = (dob) => {
@@ -297,12 +261,8 @@ function App() {
   };
 
   const setTheme = (theme) => {
-    setCurrentTheme(theme);
-    localStorage.setItem('pawhoof_theme', theme);
     document.body.removeAttribute('data-theme');
-    if (theme === 'dark') {
-      document.body.setAttribute('data-theme', 'dark');
-    }
+    if (theme === 'dark') document.body.setAttribute('data-theme', 'dark');
   };
 
   const setZoom = (val) => {
@@ -385,14 +345,6 @@ function App() {
     }
   };
 
-  const handleScrollTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const resetLocation = () => {
-    setSelectedLocation(null);
-  };
-
   return (
     <div className="App">
       {/* Background Animals */}
@@ -404,7 +356,11 @@ function App() {
       {/* Navbar */}
       <nav>
         <div className="logo">
-          <img src="/src/Paw'nHoof.png" alt="Paw'nHoof" className="logo-img" />
+          <img src="/Paw'nHoof.png" alt="Paw'nHoof" className="logo-img" onError={(e) => {
+            e.target.style.display = 'none';
+            e.target.nextSibling.style.display = 'block';
+          }} />
+          <span style={{display: 'none'}}>Paw'nHoof</span>
         </div>
         
         <div className="nav-center">
@@ -442,13 +398,13 @@ function App() {
       </nav>
 
       {/* Floating Tools */}
-        <div className="floating-tools-container" id="floating-tools">
+      <div className="floating-tools-container" id="floating-tools">
         <div className={`floating-menu ${floatingMenuActive ? 'active' : ''}`}>
-          <button className="float-btn" onClick={handleScrollTop} title="Scroll Top">
-            <i className="fa-solid fa-arrow-up"></i>
+          <button className="float-btn" onClick={() => window.scrollTo(0,0)} title="Scroll Top">
+            <span className="icon-up"></span>
           </button>
           <button className="float-btn" onClick={() => window.history.back()} title="Go Back">
-            <i className="fa-solid fa-arrow-left"></i>
+            <span className="icon-back"></span>
           </button>
           <button className="float-btn btn-setting" onClick={openSettings} title="Settings">
             <i className="fa-solid fa-gear"></i>
@@ -468,22 +424,13 @@ function App() {
         <div className="settings-group">
           <h4>Theme</h4>
           <div className="theme-options">
-            <button
-              className={`theme-btn ${currentTheme === 'light' ? 'active' : ''}`}
-              onClick={() => setTheme('light')}
-            >
+            <button className="theme-btn" onClick={() => setTheme('light')}>
               <span className="icon-sun"></span> Light
             </button>
-            <button
-              className={`theme-btn ${currentTheme === 'dark' ? 'active' : ''}`}
-              onClick={() => setTheme('dark')}
-            >
+            <button className="theme-btn" onClick={() => setTheme('dark')}>
               <span className="icon-moon"></span> Dark
             </button>
-            <button
-              className={`theme-btn ${currentTheme === 'pastel' ? 'active' : ''}`}
-              onClick={() => setTheme('pastel')}
-            >
+            <button className="theme-btn" onClick={() => setTheme('pastel')}>
               <span className="icon-palette"></span> Pastel
             </button>
           </div>
@@ -752,8 +699,6 @@ function App() {
               <option value="buffalo">Buffalo</option>
               <option value="ox">Ox</option>
               <option value="camel">Camel</option>
-              <option value="pig">Pig</option>
-              <option value="sheep">Sheep</option>
             </select>
           </div>
           
@@ -783,7 +728,7 @@ function App() {
               <div className="pet-details">
                 {animal.needsRescue && (
                   <div className="rescue-bubble" title="Needs Rescue">
-                    <i className="fa-solid fa-triangle-exclamation rescue-icon"></i>
+                    <span className="rescue-icon">🚨</span>
                     <span className="rescue-tooltip">Needs Rescue</span>
                   </div>
                 )}
@@ -837,9 +782,7 @@ function App() {
               <iframe 
                 src={selectedLocation 
                   ? `https://www.openstreetmap.org/export/embed.html?bbox=${selectedLocation.lng-0.01}%2C${selectedLocation.lat-0.01}%2C${selectedLocation.lng+0.01}%2C${selectedLocation.lat+0.01}&layer=mapnik&marker=${selectedLocation.lat}%2C${selectedLocation.lng}`
-                  : userLocation
-                    ? `https://www.openstreetmap.org/export/embed.html?bbox=${userLocation.lng-0.01}%2C${userLocation.lat-0.01}%2C${userLocation.lng+0.01}%2C${userLocation.lat+0.01}&layer=mapnik&marker=${userLocation.lat}%2C${userLocation.lng}`
-                    : "https://www.openstreetmap.org/export/embed.html?bbox=78.9400%2C21.0600%2C79.0200%2C21.1300&layer=mapnik&marker=21.0968%2C78.9814"
+                  : "https://www.openstreetmap.org/export/embed.html?bbox=78.9400%2C21.0600%2C79.0200%2C21.1300&layer=mapnik&marker=21.0968%2C78.9814"
                 }
                 style={{border: 0}} 
                 allowFullScreen 
@@ -852,9 +795,6 @@ function App() {
             <div className="location-bar">
               <div className="live-indicator">
                 <span className="pulse-dot"></span> Live
-                <button className="reset-location-btn" onClick={resetLocation} title="Reset to my location">
-                  <i className="fa-solid fa-location-crosshairs"></i>
-                </button>
               </div>
               <span className="location-text">
                 {selectedLocation ? (
@@ -877,7 +817,7 @@ function App() {
                 mapSection.scrollIntoView({ behavior: 'smooth' });
               }
             }}>
-              <i className="fa-solid fa-location-dot"></i> View Location
+              <i className="fa-solid fa-location-dot"></i> Location
             </button>
           </div>
         </div>
@@ -895,8 +835,11 @@ function App() {
           <div className="footer-top">
             <div className="footer-brand">
               <div className="footer-brand-box">
-                <img src="/Paw'nHoof.png" alt="Paw'nHoof" className="footer-logo-img" />
-                <h2 className="footer-brand-text">Paw'nHoof</h2>
+                <img src="/Paw'nHoof.png" alt="Paw'nHoof" className="footer-logo-img" onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'block';
+                }} />
+                <h2 className="footer-brand-text" style={{display: 'none'}}>Paw'nHoof..</h2>
               </div>
               <div className="social-icons">
                 <i className="fab fa-instagram"></i>
