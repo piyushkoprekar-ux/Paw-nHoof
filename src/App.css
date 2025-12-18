@@ -41,6 +41,38 @@
 
 /* Dark Theme Override */
 [data-theme="dark"] {
+    /* Backgrounds: Deep Dark Versions of the Pastels */
+    /* Cream -> Dark Charcoal */
+    --dark-bg: #121212; 
+    
+    /* Green -> Deep Forest/Moss */
+    --dark-green: #1e2b1e; 
+    
+    /* Blue -> Deep Midnight Blue */
+    --dark-blue: #1a2533; 
+    
+    /* Pink -> Deep Muted Rose */
+    --dark-pink: #331e21; 
+    
+    /* Yellow -> Dark Gold/Olive */
+    --dark-yellow: #332f1a;
+    
+    /* Purple -> Deep Indigo/Grape */
+    --dark-purple: #241e33;
+    
+    /* Lighter Shades for Text (High Contrast) */
+    --text-main: #e0e0e0;       /* Soft White */
+    --text-muted: #a0a0a0;      /* Light Grey */
+    
+    /* Accent Color: Slightly brighter/neon to pop on dark bg */
+    --accent-color: #ff8e88;    /* Kept same or use #ff6b6b for more pop */
+    
+    /* Dark Glassmorphism */
+    /* White glass ki jagah Black glass use kiya hai */
+    --glass-bg: rgba(20, 20, 20, 0.65); 
+    --glass-border: rgba(255, 255, 255, 0.1); /* Thin white border for contrast */
+    --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5); /* Stronger shadow for depth */
+
     --bg-gradient: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
     --card-bg: #2d2d2d;
     --text-main: #e0e0e0;
@@ -70,7 +102,7 @@
             overflow-x: hidden;
             position: relative;
             min-height: 100vh;
-        }
+    }
 
   /* --- 0. BACKGROUND SHADOW ANIMALS (CSS Shapes) --- */
         .bg-animals {
@@ -457,8 +489,9 @@
 
         .pet-card:hover {
             transform: translateY(-8px);
+              background: rgb(255, 254, 248);
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-            border-color: var(--primary);
+            border-color: grey;
         }
 
         .pet-img-box {
@@ -1019,9 +1052,9 @@
 
         .search-bar {
             padding: 10px 15px 10px 38px;
-            border: 1.5px solid rgba(255, 255, 255, 0.5);
+            border: 1.5px solid rgba(231, 231, 231, 0.619);
             border-radius: 25px;
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(251, 250, 255, 0.764);
             backdrop-filter: blur(10px);
             font-size: 0.9rem;
             width: 220px;
@@ -1036,9 +1069,9 @@
         .search-bar:focus {
             outline: none;
             border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(248, 255, 254, 0.959);
             width: 280px;
-            box-shadow: 0 2px 10px rgba(45, 74, 62, 0.15);
+            box-shadow: 0 2px 10px rgba(40, 66, 55, 0.15);
         }
 
         /* Like Button in Nav - Redesigned */
