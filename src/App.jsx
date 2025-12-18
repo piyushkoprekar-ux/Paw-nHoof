@@ -125,15 +125,6 @@ function App() {
     setProfileData(saved);
   };
 
-  const setTheme = (theme) => {
-    setCurrentTheme(theme);
-    localStorage.setItem('pawhoof_theme', theme);
-    document.body.removeAttribute('data-theme');
-    if (theme === 'dark') {
-      document.body.setAttribute('data-theme', 'dark');
-    }
-  };
-
   useEffect(() => {
     const loginStatus = localStorage.getItem('pawhoof_login');
     if (loginStatus === 'true') {
@@ -305,6 +296,15 @@ function App() {
     setSettingsPanelActive(false);
   };
 
+  const setTheme = (theme) => {
+    setCurrentTheme(theme);
+    localStorage.setItem('pawhoof_theme', theme);
+    document.body.removeAttribute('data-theme');
+    if (theme === 'dark') {
+      document.body.setAttribute('data-theme', 'dark');
+    }
+  };
+
   const setZoom = (val) => {
     document.body.style.zoom = val + "%";
   };
@@ -404,7 +404,7 @@ function App() {
       {/* Navbar */}
       <nav>
         <div className="logo">
-          <img src="/Paw'nHoof.png" alt="Paw'nHoof" className="logo-img" />
+          <img src="/src/Paw'nHoof.png" alt="Paw'nHoof" className="logo-img" />
         </div>
         
         <div className="nav-center">
