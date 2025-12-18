@@ -1,42 +1,95 @@
 import React, { useState, useEffect } from 'react';
 import './App.css'; 
 
-
 function App() {
   const [floatingMenuActive, setFloatingMenuActive] = useState(false);
   const [settingsPanelActive, setSettingsPanelActive] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [authView, setAuthView] = useState('login'); // 'login', 'signup', 'profile'
+  const [authView, setAuthView] = useState('profile'); // 'login', 'signup', 'profile', 'edit'
   const [authTab, setAuthTab] = useState('login');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [locationText, setLocationText] = useState('Detecting Area...');
-  const [profileImage, setProfileImage] = useState(null); // ✅ New state for image
+  const [profileImage, setProfileImage] = useState(null);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [likedAnimals, setLikedAnimals] = useState([]);
+  const [adoptedAnimals, setAdoptedAnimals] = useState([]);
+  const [selectedAnimalType, setSelectedAnimalType] = useState('all');
+  const [selectedGender, setSelectedGender] = useState('all');
+  const [nearbyOnly, setNearbyOnly] = useState(false);
+  const [mapExpanded, setMapExpanded] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [rememberMe, setRememberMe] = useState(false);
+  
+  // Form states
+  const [loginForm, setLoginForm] = useState({ email: '', password: '' });
+  const [signupForm, setSignupForm] = useState({ name: '', email: '', password: '' });
+  const [formErrors, setFormErrors] = useState({});
   
   const [profileData, setProfileData] = useState({
     name: 'Ayush Harinkhede',
     dob: '',
     mobile: '',
     address: '',
-    gender: 'Male'
+    gender: 'Male',
+    email: ''
   });
 
-  useEffect(() => {
-    const loginStatus = localStorage.getItem('pawhoof_login');
-    if (loginStatus === 'true') {
-      setIsLoggedIn(true);
-      loadProfileData();
-    }
+  // Generate 25 animals with real image URLs (cut-out style images)
+  const generateAnimals = () => {
+    const animals = [
+      // Dogs
+      { id: 1, name: 'Sheru', breed: 'Indian Pariah', gender: 'Male', age: '3 years', location: 'Hingna Road', type: 'dog', needsRescue: false, needsMedical: false, needsDonate: false, lat: 21.0968, lng: 78.9814 },
+      { id: 2, name: 'Rex', breed: 'Labrador', gender: 'Male', age: '2 years', location: 'Sadar', type: 'dog', needsRescue: true, needsMedical: false, needsDonate: false, lat: 21.1456, lng: 79.0882 },
+      { id: 3, name: 'Luna', breed: 'Golden Retriever', gender: 'Female', age: '4 years', location: 'Dharampeth', type: 'dog', needsRescue: false, needsMedical: true, needsDonate: false, lat: 21.1523, lng: 79.0801 },
+      { id: 4, name: 'Max', breed: 'German Shepherd', gender: 'Male', age: '5 years', location: 'Seminary Hills', type: 'dog', needsRescue: true, needsMedical: false, needsDonate: true, lat: 21.1389, lng: 79.0654 },
+      { id: 5, name: 'Bella', breed: 'Beagle', gender: 'Female', age: '1 year', location: 'Itwari', type: 'dog', needsRescue: false, needsMedical: false, needsDonate: false, lat: 21.1623, lng: 79.0923 },
+      
+      // Cats
+      { id: 6, name: 'Mimi', breed: 'Persian Mix', gender: 'Female', age: '2 years', location: 'Sadar', type: 'cat', needsRescue: false, needsMedical: false, needsDonate: false, lat: 21.1456, lng: 79.0882 },
+      { id: 7, name: 'Whiskers', breed: 'Siamese', gender: 'Male', age: '3 years', location: 'Futala', type: 'cat', needsRescue: true, needsMedical: false, needsDonate: false, lat: 21.1289, lng: 79.0456 },
+      { id: 8, name: 'Shadow', breed: 'Maine Coon', gender: 'Male', age: '4 years', location: 'Dharampeth', type: 'cat', needsRescue: false, needsMedical: true, needsDonate: false, lat: 21.1523, lng: 79.0801 },
+      { id: 9, name: 'Lily', breed: 'British Shorthair', gender: 'Female', age: '1 year', location: 'Hingna Road', type: 'cat', needsRescue: false, needsMedical: false, needsDonate: true, lat: 21.0968, lng: 78.9814 },
+      
+      // Squirrels
+      { id: 10, name: 'Chiku', breed: 'Indian Palm Squirrel', gender: 'Male', age: '6 months', location: 'Seminary Hills', type: 'squirrel', needsRescue: true, needsMedical: false, needsDonate: false, lat: 21.1389, lng: 79.0654 },
+      { id: 11, name: 'Nibbles', breed: 'Three-striped Squirrel', gender: 'Female', age: '8 months', location: 'Futala', type: 'squirrel', needsRescue: false, needsMedical: false, needsDonate: false, lat: 21.1289, lng: 79.0456 },
+      
+      // Goats
+      { id: 12, name: 'Balu', breed: 'Desi Goat', gender: 'Male', age: '2 years', location: 'Itwari', type: 'goat', needsRescue: false, needsMedical: false, needsDonate: false, lat: 21.1623, lng: 79.0923 },
+      { id: 13, name: 'Chhaya', breed: 'Jamnapari', gender: 'Female', age: '3 years', location: 'Hingna Road', type: 'goat', needsRescue: false, needsMedical: true, needsDonate: true, lat: 21.0968, lng: 78.9814 },
+      { id: 14, name: 'Ramu', breed: 'Barbari', gender: 'Male', age: '1 year', location: 'Sadar', type: 'goat', needsRescue: true, needsMedical: false, needsDonate: false, lat: 21.1456, lng: 79.0882 },
+      
+      // Horses
+      { id: 15, name: 'Badal', breed: 'Pony', gender: 'Male', age: '5 years', location: 'Futala', type: 'horse', needsRescue: false, needsMedical: true, needsDonate: false, lat: 21.1289, lng: 79.0456 },
+      { id: 16, name: 'Storm', breed: 'Marwari', gender: 'Male', age: '7 years', location: 'Dharampeth', type: 'horse', needsRescue: false, needsMedical: false, needsDonate: true, lat: 21.1523, lng: 79.0801 },
+      { id: 17, name: 'Princess', breed: 'Arabian', gender: 'Female', age: '4 years', location: 'Seminary Hills', type: 'horse', needsRescue: true, needsMedical: false, needsDonate: false, lat: 21.1389, lng: 79.0654 },
+      
+      // Cows
+      { id: 18, name: 'Gauri', breed: 'Desi Cow', gender: 'Female', age: '6 years', location: 'Dharampeth', type: 'cow', needsRescue: false, needsMedical: false, needsDonate: true, lat: 21.1523, lng: 79.0801 },
+      { id: 19, name: 'Kamdhenu', breed: 'Gir', gender: 'Female', age: '8 years', location: 'Hingna Road', type: 'cow', needsRescue: false, needsMedical: true, needsDonate: false, lat: 21.0968, lng: 78.9814 },
+      { id: 20, name: 'Lakshmi', breed: 'Sahiwal', gender: 'Female', age: '5 years', location: 'Itwari', type: 'cow', needsRescue: true, needsMedical: false, needsDonate: true, lat: 21.1623, lng: 79.0923 },
+      
+      // Buffalo
+      { id: 21, name: 'Mahadev', breed: 'Murrah', gender: 'Male', age: '4 years', location: 'Sadar', type: 'buffalo', needsRescue: false, needsMedical: false, needsDonate: false, lat: 21.1456, lng: 79.0882 },
+      { id: 22, name: 'Shakti', breed: 'Nili-Ravi', gender: 'Female', age: '6 years', location: 'Futala', type: 'buffalo', needsRescue: false, needsMedical: true, needsDonate: true, lat: 21.1289, lng: 79.0456 },
+      
+      // Ox
+      { id: 23, name: 'Bhim', breed: 'Ongole', gender: 'Male', age: '7 years', location: 'Dharampeth', type: 'ox', needsRescue: false, needsMedical: false, needsDonate: false, lat: 21.1523, lng: 79.0801 },
+      { id: 24, name: 'Balram', breed: 'Gir', gender: 'Male', age: '9 years', location: 'Seminary Hills', type: 'ox', needsRescue: true, needsMedical: true, needsDonate: false, lat: 21.1389, lng: 79.0654 },
+      
+      // Camel
+      { id: 25, name: 'Sahara', breed: 'Bikaneri', gender: 'Male', age: '10 years', location: 'Hingna Road', type: 'camel', needsRescue: false, needsMedical: false, needsDonate: true, lat: 21.0968, lng: 78.9814 }
+    ];
     
-    // ✅ Load saved profile image
-    const savedImage = localStorage.getItem('profile_image');
-    if (savedImage) {
-      setProfileImage(savedImage);
-    }
-    
-    setTimeout(() => {
-      setLocationText('📍 Hingna, Nagpur (MH)');
-    }, 1500);
-  }, []);
+    // Add image URLs (using placeholder service that provides cut-out style images)
+    return animals.map(animal => ({
+      ...animal,
+      image: `https://source.unsplash.com/400x400/?${animal.type}+animal&sig=${animal.id}`
+    }));
+  };
+
+  const [animals] = useState(generateAnimals());
 
   const loadProfileData = () => {
     const saved = {
@@ -44,10 +97,156 @@ function App() {
       mobile: localStorage.getItem('p_mobile') || '',
       address: localStorage.getItem('p_addr') || '',
       dob: localStorage.getItem('p_dob') || '',
-      gender: localStorage.getItem('p_gender') || 'Male'
+      gender: localStorage.getItem('p_gender') || 'Male',
+      email: localStorage.getItem('p_email') || ''
     };
     setProfileData(saved);
   };
+
+  useEffect(() => {
+    const loginStatus = localStorage.getItem('pawhoof_login');
+    if (loginStatus === 'true') {
+      setIsLoggedIn(true);
+      loadProfileData();
+      setAuthView('profile');
+    }
+    
+    const savedImage = localStorage.getItem('profile_image');
+    if (savedImage) {
+      setProfileImage(savedImage);
+    }
+    
+    const savedLikes = localStorage.getItem('liked_animals');
+    if (savedLikes) {
+      setLikedAnimals(JSON.parse(savedLikes));
+    }
+    
+    const savedAdopted = localStorage.getItem('adopted_animals');
+    if (savedAdopted) {
+      setAdoptedAnimals(JSON.parse(savedAdopted));
+    }
+    
+    setTimeout(() => {
+      setLocationText('Hingna, Nagpur (MH)');
+    }, 1500);
+  }, []);
+
+  const calculateAge = (dob) => {
+    if (!dob) return '';
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
+  const validatePassword = (password) => {
+    return password.length >= 8;
+  };
+
+  const handleLogin = () => {
+    const errors = {};
+    if (!loginForm.email || !validateEmail(loginForm.email)) {
+      errors.email = 'Please enter a valid Gmail address';
+    }
+    if (!loginForm.password || !validatePassword(loginForm.password)) {
+      errors.password = 'Password must be at least 8 characters';
+    }
+    
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+    
+    setFormErrors({});
+    if (rememberMe) {
+      localStorage.setItem('remembered_email', loginForm.email);
+    }
+    simulateLogin();
+  };
+
+  const handleSignup = () => {
+    const errors = {};
+    if (!signupForm.name || signupForm.name.trim().length < 2) {
+      errors.name = 'Name must be at least 2 characters';
+    }
+    if (!signupForm.email || !validateEmail(signupForm.email)) {
+      errors.email = 'Please enter a valid Gmail address';
+    }
+    if (!signupForm.password || !validatePassword(signupForm.password)) {
+      errors.password = 'Password must be at least 8 characters';
+    }
+    
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+    
+    setFormErrors({});
+    localStorage.setItem('p_name', signupForm.name);
+    localStorage.setItem('p_email', signupForm.email);
+    if (rememberMe) {
+      localStorage.setItem('remembered_email', signupForm.email);
+    }
+    simulateLogin();
+  };
+
+  const simulateLogin = () => {
+    localStorage.setItem('pawhoof_login', 'true');
+    setIsLoggedIn(true);
+    setTimeout(() => {
+      setAuthView('profile');
+      loadProfileData();
+    }, 500);
+  };
+
+  const toggleLike = (animalId) => {
+    setLikedAnimals(prev => {
+      const newLikes = prev.includes(animalId) 
+        ? prev.filter(id => id !== animalId)
+        : [...prev, animalId];
+      localStorage.setItem('liked_animals', JSON.stringify(newLikes));
+      return newLikes;
+    });
+  };
+
+  const toggleAdopt = (animalId) => {
+    setAdoptedAnimals(prev => {
+      const newAdopted = prev.includes(animalId)
+        ? prev.filter(id => id !== animalId)
+        : [...prev, animalId];
+      localStorage.setItem('adopted_animals', JSON.stringify(newAdopted));
+      return newAdopted;
+    });
+  };
+
+  const handleLocationClick = (animal) => {
+    setSelectedLocation({ lat: animal.lat, lng: animal.lng, name: animal.location });
+    setMapExpanded(false);
+    setTimeout(() => {
+      const mapSection = document.getElementById('feed');
+      if (mapSection) {
+        mapSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
+  const filteredAnimals = animals.filter(animal => {
+    const matchesType = selectedAnimalType === 'all' || animal.type === selectedAnimalType;
+    const matchesGender = selectedGender === 'all' || animal.gender.toLowerCase() === selectedGender.toLowerCase();
+    const matchesSearch = !searchQuery || animal.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                         animal.breed.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         animal.location.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesType && matchesGender && matchesSearch;
+  });
 
   const toggleFloatingMenu = () => {
     setFloatingMenuActive(!floatingMenuActive);
@@ -79,6 +278,7 @@ function App() {
     setAuthModalOpen(true);
     if (isLoggedIn || mode === 'profile') {
       setAuthView('profile');
+      setIsEditingProfile(false);
     } else {
       setAuthView('auth');
       setAuthTab('login');
@@ -91,19 +291,12 @@ function App() {
 
   const switchAuthTab = (tab) => {
     setAuthTab(tab);
-  };
-
-  const simulateLogin = () => {
-    localStorage.setItem('pawhoof_login', 'true');
-    setIsLoggedIn(true);
-    setTimeout(() => {
-      setAuthView('profile');
-    }, 1000);
+    setFormErrors({});
   };
 
   const logout = () => {
     localStorage.removeItem('pawhoof_login');
-    localStorage.removeItem('profile_image'); // ✅ Clear image on logout
+    localStorage.removeItem('profile_image');
     setProfileImage(null);
     setIsLoggedIn(false);
     closeAuthModal();
@@ -117,8 +310,9 @@ function App() {
     localStorage.setItem('p_dob', profileData.dob);
     localStorage.setItem('p_gender', profileData.gender);
     if (profileImage) {
-      localStorage.setItem('profile_image', profileImage); // ✅ Save image
+      localStorage.setItem('profile_image', profileImage);
     }
+    setIsEditingProfile(false);
     alert("Profile Saved!");
   };
 
@@ -126,11 +320,9 @@ function App() {
     setProfileData(prev => ({ ...prev, [field]: value }));
   };
 
-  // ✅ New function for image upload
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Check file size (limit to 2MB)
       if (file.size > 2 * 1024 * 1024) {
         alert('Image size should be less than 2MB');
         return;
@@ -146,6 +338,13 @@ function App() {
     }
   };
 
+  const handleStartDonating = () => {
+    const adoptSection = document.getElementById('pets');
+    if (adoptSection) {
+      adoptSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="App">
       {/* Background Animals */}
@@ -156,25 +355,44 @@ function App() {
 
       {/* Navbar */}
       <nav>
-         <div className="nav-links">
         <div className="logo">
-          <svg width="30" height="30" viewBox="0 0 24 24" fill="var(--deep-green)">
-            <path d="M12,2C13.1,2 14,2.9 14,4S13.1,6 12,6S10,5.1 10,4S10.9,2 12,2M7,5C8.1,5 9,5.9 9,7S8.1,9 7,9S5,8.1 5,7S5.9,5 7,5M17,5C18.1,5 19,5.9 19,7S18.1,9 17,9S15.9,9 15,7S15.9,5 17,5M12,8C15,8 17,9.5 18,12C18.6,13.5 18.1,17.4 16,19C14.7,20 13.5,19.5 12,19.5C10.5,19.5 9.3,20 8,19C5.9,17.4 5.4,13.5 6,12C7,9.5 9,8 12,8Z"/>
-          </svg>
-          Paw'nHoof
+          <img src="/Paw'nHoof.png" alt="Paw'nHoof" className="logo-img" onError={(e) => {
+            e.target.style.display = 'none';
+            e.target.nextSibling.style.display = 'block';
+          }} />
+          <span style={{display: 'none'}}>Paw'nHoof</span>
         </div>
-        <div className="nav-links">
-          <a href="#home">Home</a>
-          <a href="#feed">Feed Center</a>
-          <a href="#pets">Pets</a>
-          <a href="#about">About</a>
-        </div></div>
+        
+        <div className="nav-center">
+          <div className="search-bar-container">
+            <span className="search-icon"></span>
+            <input 
+              type="text" 
+              className="search-bar" 
+              placeholder="search anything"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          
+          <button className="nav-like-btn" onClick={() => alert(`You have liked ${likedAnimals.length} animals`)}>
+            <span className="like-icon"></span>
+            {likedAnimals.length > 0 && <span className="like-count">{likedAnimals.length}</span>}
+          </button>
+          
+          <button className="nav-basket-btn" onClick={() => alert(`You have ${adoptedAnimals.length} animals in your basket`)}>
+            <span className="basket-icon"></span>
+            {adoptedAnimals.length > 0 && <span className="basket-count">{adoptedAnimals.length}</span>}
+          </button>
+        </div>
+        
         <div className="auth-btn-container">
           {!isLoggedIn ? (
             <button className="login-btn" onClick={() => openAuthModal('login')}>Sign In</button>
           ) : (
             <div className="user-avatar-nav" onClick={() => openAuthModal('profile')} style={{display: 'flex'}}>
-    <img  src={profileImage || `https://ui-avatars.com/api/?name=${profileData.name}&background=5e3fdc&color=fff`}  alt="User" />            </div>
+              <img src={profileImage || `https://ui-avatars.com/api/?name=${profileData.name}&background=5e3fdc&color=fff`} alt="User" />
+            </div>
           )}
         </div>
       </nav>
@@ -182,9 +400,15 @@ function App() {
       {/* Floating Tools */}
       <div className="floating-tools-container" id="floating-tools">
         <div className={`floating-menu ${floatingMenuActive ? 'active' : ''}`}>
-          <button className="float-btn" onClick={() => window.scrollTo(0,0)} title="Scroll Top">⬆</button>
-          <button className="float-btn" onClick={() => window.history.back()} title="Go Back">⬅</button>
-          <button className="float-btn" onClick={openSettings} title="Settings">⚙</button>
+          <button className="float-btn" onClick={() => window.scrollTo(0,0)} title="Scroll Top">
+            <span className="icon-up"></span>
+          </button>
+          <button className="float-btn" onClick={() => window.history.back()} title="Go Back">
+            <span className="icon-back"></span>
+          </button>
+          <button className="float-btn" onClick={openSettings} title="Settings">
+            <span className="icon-settings"></span>
+          </button>
         </div>
         <button className={`float-btn main-toggle ${floatingMenuActive ? 'active' : ''}`} onClick={toggleFloatingMenu}>+</button>
       </div>
@@ -193,16 +417,22 @@ function App() {
       <div className={`settings-overlay ${settingsPanelActive ? 'active' : ''}`} onClick={closeSettings}></div>
       <div className={`settings-panel ${settingsPanelActive ? 'active' : ''}`}>
         <div className="settings-header">
-          <h3>⚙ Settings</h3>
-          <span onClick={closeSettings} style={{cursor: 'pointer', fontSize: '1.5rem'}}>&times;</span>
+          <h3><span className="icon-settings-small"></span> Settings</h3>
+          <span className="close-icon" onClick={closeSettings}>&times;</span>
         </div>
 
         <div className="settings-group">
           <h4>Theme</h4>
           <div className="theme-options">
-            <button className="theme-btn" onClick={() => setTheme('light')}>☀ Light</button>
-            <button className="theme-btn" onClick={() => setTheme('dark')}>🌙 Dark</button>
-            <button className="theme-btn" onClick={() => setTheme('pastel')}>🎨 Pastel</button>
+            <button className="theme-btn" onClick={() => setTheme('light')}>
+              <span className="icon-sun"></span> Light
+            </button>
+            <button className="theme-btn" onClick={() => setTheme('dark')}>
+              <span className="icon-moon"></span> Dark
+            </button>
+            <button className="theme-btn" onClick={() => setTheme('pastel')}>
+              <span className="icon-palette"></span> Pastel
+            </button>
           </div>
         </div>
 
@@ -235,7 +465,7 @@ function App() {
       {/* Auth Modal */}
       {authModalOpen && (
         <div className="modal-wrapper" style={{display: 'flex'}}>
-          <div className="auth-card">
+          <div className={`auth-card ${authTab === 'signup' ? 'slide-right' : 'slide-left'}`}>
             <span className="close-modal" onClick={closeAuthModal}>&times;</span>
 
             {authView === 'auth' ? (
@@ -246,120 +476,191 @@ function App() {
                 </div>
 
                 {authTab === 'login' ? (
-                  <div>
+                  <div className="auth-form">
                     <div className="form-group">
                       <label>Email</label>
-                      <input type="email" placeholder="user@example.com" />
+                      <input 
+                        type="email" 
+                        placeholder="user@gmail.com" 
+                        value={loginForm.email}
+                        onChange={(e) => setLoginForm({...loginForm, email: e.target.value})}
+                      />
+                      {formErrors.email && <span className="error-text">{formErrors.email}</span>}
                     </div>
                     <div className="form-group">
                       <label>Password</label>
-                      <input type="password" placeholder="••••••" />
+                      <input 
+                        type="password" 
+                        placeholder="••••••••" 
+                        value={loginForm.password}
+                        onChange={(e) => setLoginForm({...loginForm, password: e.target.value})}
+                      />
+                      {formErrors.password && <span className="error-text">{formErrors.password}</span>}
                     </div>
-                    <button className="login-btn" style={{width: '100%'}} onClick={simulateLogin}>Login</button>
+                    <div className="form-group">
+                      <label className="remember-me">
+                        <input type="checkbox" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} />
+                        <span className="remember-me-text">Remember Me</span>
+                      </label>
+                    </div>
+                    <button className="login-btn" style={{width: '100%'}} onClick={handleLogin}>Login</button>
                   </div>
                 ) : (
-                  <div>
+                  <div className="auth-form">
                     <div className="form-group">
                       <label>Full Name</label>
-                      <input type="text" placeholder="Entre Your Name" />
+                      <input 
+                        type="text" 
+                        placeholder="Enter Your Name" 
+                        value={signupForm.name}
+                        onChange={(e) => setSignupForm({...signupForm, name: e.target.value})}
+                      />
+                      {formErrors.name && <span className="error-text">{formErrors.name}</span>}
                     </div>
                     <div className="form-group">
                       <label>Email</label>
-                      <input type="email" placeholder="user@example.com" />
+                      <input 
+                        type="email" 
+                        placeholder="user@gmail.com" 
+                        value={signupForm.email}
+                        onChange={(e) => setSignupForm({...signupForm, email: e.target.value})}
+                      />
+                      {formErrors.email && <span className="error-text">{formErrors.email}</span>}
                     </div>
                     <div className="form-group">
                       <label>Password</label>
-                      <input type="password" placeholder="Create Password" />
+                      <input 
+                        type="password" 
+                        placeholder="Create Password (min 8 chars)" 
+                        value={signupForm.password}
+                        onChange={(e) => setSignupForm({...signupForm, password: e.target.value})}
+                      />
+                      {formErrors.password && <span className="error-text">{formErrors.password}</span>}
                     </div>
-                    <button className="login-btn" style={{width: '100%'}} onClick={simulateLogin}>Create Account</button>
+                    <div className="form-group">
+                      <label className="remember-me">
+                        <input type="checkbox" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} />
+                        <span className="remember-me-text">Remember Me</span>
+                      </label>
+                    </div>
+                    <button className="login-btn" style={{width: '100%'}} onClick={handleSignup}>Create Account</button>
                   </div>
                 )}
 
                 <div className="social-login">
-                  <button className="social-btn">🔵 Facebook</button>
-                  <button className="social-btn">🔴 Google</button>
-                  <button className="social-btn">⚫ Apple</button>
-                  <button className="social-btn">🟦 Microsoft</button>
+                  <button className="social-btn facebook-btn">
+                    <span className="social-icon facebook-icon"></span>
+                    <span>Facebook</span>
+                  </button>
+                  <button className="social-btn google-btn">
+                    <span className="social-icon google-icon"></span>
+                    <span>Google</span>
+                  </button>
+                  <button className="social-btn apple-btn">
+                    <span className="social-icon apple-icon"></span>
+                    <span>Apple</span>
+                  </button>
+                  <button className="social-btn microsoft-btn">
+                    <span className="social-icon microsoft-icon"></span>
+                    <span>Microsoft</span>
+                  </button>
                 </div>
               </div>
             ) : (
               <div>
-                
-         
-<div className="profile-header">
-  <div className="profile-pic-upload">
-    <img 
-      src={profileImage || `https://ui-avatars.com/api/?name=${profileData.name}&background=5e3fdc&color=fff`} 
-      alt="Profile" 
-    />
-    <input 
-      type="file" 
-      id="profile-pic-input" 
-      accept="image/*" 
-      onChange={handleImageUpload}
-      style={{display: 'none'}}
-    />
-    <label 
-      htmlFor="profile-pic-input" 
-      className="edit-icon" 
-      style={{cursor: 'pointer'}}
-    >
-      📷
-    </label>
-  </div>
-  
-  <h3>{profileData.name}</h3>
-  
-  {/* ✅ Upload Button */}
-  <label 
-    htmlFor="profile-pic-input" 
-    className="upload-image-btn"
-    style={{
-      display: 'inline-block',
-      marginTop: '10px',
-      padding: '8px 20px',
-      background: 'var(--primary)',
-      color: 'white',
-      borderRadius: '20px',
-      cursor: 'pointer',
-      fontSize: '0.9rem',
-      fontWeight: 'bold',
-      transition: '0.3s'
-    }}
-    onMouseEnter={(e) => e.target.style.background = 'var(--accent)'}
-    onMouseLeave={(e) => e.target.style.background = 'var(--primary)'}
-  >
-    📤 Upload Image
-  </label>
-</div>
+                {!isEditingProfile ? (
+                  <div className="profile-view">
+                    <div className="profile-header">
+                      <div className="profile-pic-upload">
+                        <img 
+                          src={profileImage || `https://ui-avatars.com/api/?name=${profileData.name}&background=5e3fdc&color=fff`} 
+                          alt="Profile" 
+                        />
+                      </div>
+                      <h3>{profileData.name}</h3>
+                      {profileData.email && <p className="profile-email">{profileData.email}</p>}
+                      {profileData.dob && <p className="profile-age">Age: {calculateAge(profileData.dob)} years</p>}
+                      {profileData.mobile && (
+                        <p className="profile-mobile">
+                          <span className="icon-phone"></span> {profileData.mobile}
+                          <span className="verified-tick">✓</span>
+                        </p>
+                      )}
+                      {profileData.address && (
+                        <p className="profile-address">
+                          <span className="icon-location"></span> {profileData.address}
+                        </p>
+                      )}
+                      {profileData.gender && <p className="profile-gender">Gender: {profileData.gender}</p>}
+                    </div>
+                    <button className="login-btn" style={{width: '100%', marginBottom: '10px'}} onClick={() => setIsEditingProfile(true)}>Edit Profile</button>
+                    <button className="logout-btn" onClick={logout}>Log Out</button>
+                  </div>
+                ) : (
+                  <div className="profile-edit">
+                    <div className="profile-header">
+                      <div className="profile-pic-upload">
+                        <img 
+                          src={profileImage || `https://ui-avatars.com/api/?name=${profileData.name}&background=5e3fdc&color=fff`} 
+                          alt="Profile" 
+                        />
+                        <input 
+                          type="file" 
+                          id="profile-pic-input" 
+                          accept="image/*" 
+                          onChange={handleImageUpload}
+                          style={{display: 'none'}}
+                        />
+                        <label 
+                          htmlFor="profile-pic-input" 
+                          className="edit-icon" 
+                          style={{cursor: 'pointer'}}
+                        >
+                          <span className="icon-camera"></span>
+                        </label>
+                      </div>
+                      <h3>Edit Profile</h3>
+                      <label 
+                        htmlFor="profile-pic-input" 
+                        className="upload-image-btn"
+                      >
+                        📤 Upload Profile Photo
+                      </label>
+                    </div>
 
-                <div className="form-group">
-                  <label>Full Name</label>
-                  <input type="text" value={profileData.name} onChange={(e) => handleProfileChange('name', e.target.value)} />
-                </div>
-                <div className="form-group">
-                  <label>DOB</label>
-                  <input type="date" value={profileData.dob} onChange={(e) => handleProfileChange('dob', e.target.value)} />
-                </div>
-                <div className="form-group">
-                  <label>Mobile</label>
-                  <input type="tel" value={profileData.mobile} placeholder="+91 0000000000" onChange={(e) => handleProfileChange('mobile', e.target.value)} />
-                </div>
-                <div className="form-group">
-                  <label>Address</label>
-                  <textarea value={profileData.address} rows="2" placeholder="Nagpur, MH" onChange={(e) => handleProfileChange('address', e.target.value)}></textarea>
-                </div>
-                <div className="form-group">
-                  <label>Gender</label>
-                  <select value={profileData.gender} onChange={(e) => handleProfileChange('gender', e.target.value)}>
-                    <option>Male</option>
-                    <option>Female</option>
-                    <option>Other</option>
-                  </select>
-                </div>
+                    <div className="form-group">
+                      <label>Full Name</label>
+                      <input type="text" value={profileData.name} onChange={(e) => handleProfileChange('name', e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                      <label>Date of Birth</label>
+                      <input type="date" value={profileData.dob} onChange={(e) => handleProfileChange('dob', e.target.value)} />
+                      {profileData.dob && <p className="age-preview">Age: {calculateAge(profileData.dob)} years</p>}
+                    </div>
+                    <div className="form-group">
+                      <label>Mobile</label>
+                      <div className="mobile-input-group">
+                        <input type="tel" value={profileData.mobile} placeholder="+91 0000000000" onChange={(e) => handleProfileChange('mobile', e.target.value)} />
+                        {profileData.mobile && profileData.mobile.length >= 10 && <span className="verified-tick">✓</span>}
+                      </div>
+                    </div>
+                    <div className="form-group">
+                      <label>Address</label>
+                      <textarea value={profileData.address} rows="2" placeholder="Nagpur, MH" onChange={(e) => handleProfileChange('address', e.target.value)}></textarea>
+                    </div>
+                    <div className="form-group">
+                      <label>Gender</label>
+                      <select value={profileData.gender} onChange={(e) => handleProfileChange('gender', e.target.value)}>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Other</option>
+                      </select>
+                    </div>
 
-                <button className="login-btn" style={{width: '100%', marginBottom: '10px'}} onClick={saveProfile}>Save Changes</button>
-                <button className="logout-btn" onClick={logout}>Log Out</button>
+                    <button className="login-btn" style={{width: '100%', marginBottom: '10px'}} onClick={saveProfile}>Save Changes</button>
+                    <button className="logout-btn" onClick={() => setIsEditingProfile(false)}>Cancel</button>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -371,7 +672,7 @@ function App() {
         <div className="hero-text">
           <h1>Save a Paw,<br/>Feed a Hoof</h1>
           <p>Every wag and every hoofbeat tells a story. Join our mission to adopt, feed, and love the strays.</p>
-          <button className="account-btn" style={{padding: '15px 40px', fontSize: '1.2rem'}}>Start Donating</button>
+          <button className="account-btn start-donating-btn" onClick={handleStartDonating}>Start Donating</button>
         </div>
         <div className="hero-visual">
           <div className="blob">
@@ -380,24 +681,128 @@ function App() {
         </div>
       </section>
 
+      {/* Adopt a Friend Section with Filters */}
+      <div className="pets-section" id="pets">
+        <h2 className="section-title">Adopt a Friend</h2>
+        
+        <div className="filter-section">
+          <div className="filter-group">
+            <label>Animal Type:</label>
+            <select value={selectedAnimalType} onChange={(e) => setSelectedAnimalType(e.target.value)}>
+              <option value="all">All Animals</option>
+              <option value="dog">Dog</option>
+              <option value="cat">Cat</option>
+              <option value="squirrel">Squirrel</option>
+              <option value="goat">Goat</option>
+              <option value="horse">Horse</option>
+              <option value="cow">Cow</option>
+              <option value="buffalo">Buffalo</option>
+              <option value="ox">Ox</option>
+              <option value="camel">Camel</option>
+            </select>
+          </div>
+          
+          <div className="filter-group">
+            <label>Gender:</label>
+            <select value={selectedGender} onChange={(e) => setSelectedGender(e.target.value)}>
+              <option value="all">All</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+          
+          <div className="filter-group">
+            <label className="toggle-label">
+              <input type="checkbox" checked={nearbyOnly} onChange={(e) => setNearbyOnly(e.target.checked)} />
+              <span>Nearby Only</span>
+            </label>
+          </div>
+        </div>
+
+        <div className="pet-grid">
+          {filteredAnimals.map((animal) => (
+            <div key={animal.id} className="pet-card">
+              <div className="pet-img-box">
+                <img src={animal.image} alt={animal.name} className="pet-image" />
+              </div>
+              <div className="pet-details">
+                {animal.needsRescue && (
+                  <div className="rescue-bubble" title="Needs Rescue">
+                    <span className="rescue-icon">🚨</span>
+                    <span className="rescue-tooltip">Needs Rescue</span>
+                  </div>
+                )}
+                <div className="pet-name">{animal.name}</div>
+                <div className="pet-breed">{animal.breed} <span className="animal-type">({animal.type})</span></div>
+                <div className="pet-info">
+                  <span>Gender: {animal.gender}</span>
+                  <span>Age: {animal.age}</span>
+                </div>
+                <div className="location-tag" onClick={() => handleLocationClick(animal)} style={{cursor: 'pointer'}}>
+                  <span className="icon-location-small"></span> {animal.location}
+                </div>
+                <div className="card-actions">
+                  <button 
+                    className={`btn-adopt ${adoptedAnimals.includes(animal.id) ? 'adopted' : ''}`}
+                    onClick={() => toggleAdopt(animal.id)}
+                  >
+                    <span className="basket-icon-small"></span>
+                    <span>Adopt Me</span>
+                  </button>
+                  <button 
+                    className={`btn-heart-open ${likedAnimals.includes(animal.id) ? 'active' : ''}`}
+                    onClick={() => toggleLike(animal.id)}
+                    title="Like"
+                  >
+                    <span className="heart-icon-open"></span>
+                  </button>
+                  {animal.needsMedical && (
+                    <button className="btn-medical" onClick={() => alert('Medical aid requested for ' + animal.name)}>
+                      <span className="icon-medical"></span> Medical
+                    </button>
+                  )}
+                  {animal.needsDonate && (
+                    <button className="btn-donate" onClick={() => alert('Donation requested for ' + animal.name)}>
+                      <span className="icon-donate"></span> Donate
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Feed Section */}
       <section className="section-container" id="feed">
         <h2 className="section-title">Feed Centers & Map</h2>
-        <div className="feed-layout">
+        <div className={`feed-layout ${mapExpanded ? 'expanded' : ''}`}>
           <div className="map-wrapper">
-            <div className="map-container">
+            <div className={`map-container ${mapExpanded ? 'fullscreen' : ''}`}>
               <iframe 
-                src="https://www.openstreetmap.org/export/embed.html?bbox=78.9400%2C21.0600%2C79.0200%2C21.1300&layer=mapnik&marker=21.0968%2C78.9814" 
+                src={selectedLocation 
+                  ? `https://www.openstreetmap.org/export/embed.html?bbox=${selectedLocation.lng-0.01}%2C${selectedLocation.lat-0.01}%2C${selectedLocation.lng+0.01}%2C${selectedLocation.lat+0.01}&layer=mapnik&marker=${selectedLocation.lat}%2C${selectedLocation.lng}`
+                  : "https://www.openstreetmap.org/export/embed.html?bbox=78.9400%2C21.0600%2C79.0200%2C21.1300&layer=mapnik&marker=21.0968%2C78.9814"
+                }
                 style={{border: 0}} 
                 allowFullScreen 
                 loading="lazy"
               />
+              <button className="expand-map-btn" onClick={() => setMapExpanded(!mapExpanded)} title={mapExpanded ? 'Close' : 'Expand'}>
+                <span className={mapExpanded ? 'icon-close' : 'icon-expand'}></span>
+              </button>
             </div>
             <div className="location-bar">
               <div className="live-indicator">
                 <span className="pulse-dot"></span> Live
               </div>
-              <span className="location-text">{locationText}</span>
+              <span className="location-text">
+                {selectedLocation ? (
+                  <>
+                    <span className="icon-location-small"></span> {selectedLocation.name}
+                  </>
+                ) : locationText}
+              </span>
             </div>
           </div>
           <div className="feed-info">
@@ -406,68 +811,17 @@ function App() {
               Use our symmetrical map interface to find feeding centers near <strong>Nagpur</strong>. Donate food or visit personally to feed cows, dogs, and goats.
             </p>
             <br/>
-            <button className="btn-adopt">View Locations</button>
+            <button className="btn-adopt view-location-btn" onClick={() => {
+              const mapSection = document.getElementById('feed');
+              if (mapSection) {
+                mapSection.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}>
+              <span className="icon-location-small"></span> View Locations
+            </button>
           </div>
         </div>
       </section>
-
-      {/* Pets Section */}
-      <div className="pets-section" id="pets">
-        <h2 className="section-title">Adopt a Friend</h2>
-
-        <div className="category-title">
-          <span>🐾</span> THE PAWS <span>(Dog, Cat, Bear, Squirrel)</span>
-        </div>
-        <div className="pet-grid">
-          {[
-            {name: 'Sheru', breed: 'Indian Pariah | Male', location: 'Hingna Road', emoji: '🐕', bg: 'var(--pastel-blue)'},
-            {name: 'Mimi', breed: 'Persian Mix | Female', location: 'Sadar', emoji: '🐈', bg: 'var(--pastel-pink)'},
-            {name: 'Chiku', breed: 'Squirrel | Rescue', location: 'Seminary Hills', emoji: '🐿️', bg: 'var(--pastel-green)'}
-            
-          ].map((pet, i) => (
-            <div key={i} className="pet-card">
-              <div className="pet-img-box" style={{background: pet.bg}}>
-                <div className="css-icon">{pet.emoji}</div>
-              </div>
-              <div className="pet-details">
-                <div className="pet-name">{pet.name}</div>
-                <div className="pet-breed">{pet.breed}</div>
-                <div className="location-tag">📍 {pet.location}</div>
-                <div className="card-actions">
-                  <button className="btn-adopt">Adopt Me</button>
-                  <div className="btn-heart">♥</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="category-title" style={{marginTop: '60px'}}>
-          <span>🐄</span> THE HOOVES <span>(Cow, Goat, Horse, Deer)</span>
-        </div>
-        <div className="pet-grid">
-          {[
-            {name: 'Gauri', breed: 'Desi Cow | Female', location: 'Dharampeth', emoji: '🐄', bg: 'var(--pastel-yellow)', btn: 'Donate Fodder'},
-            {name: 'Balu', breed: 'Goat | Male', location: 'Itwari', emoji: '🐐', bg: 'var(--pastel-purple)', btn: 'Adopt Me'},
-            {name: 'Badal', breed: 'Pony | Male', location: 'Futala', emoji: '🐎', bg: 'var(--pastel-blue)', btn: 'Medical Aid'}
-          ].map((pet, i) => (
-            <div key={i} className="pet-card">
-              <div className="pet-img-box" style={{background: pet.bg}}>
-                <div className="css-icon">{pet.emoji}</div>
-              </div>
-              <div className="pet-details">
-                <div className="pet-name">{pet.name}</div>
-                <div className="pet-breed">{pet.breed}</div>
-                <div className="location-tag">📍 {pet.location}</div>
-                <div className="card-actions">
-                  <button className="btn-adopt">{pet.btn}</button>
-                  <div className="btn-heart">♥</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* Footer */}
       <div className="footer-wrapper">
@@ -481,7 +835,11 @@ function App() {
           <div className="footer-top">
             <div className="footer-brand">
               <div className="footer-brand-box">
-                <h2 className="footer-brand-text">Paw'nHoof..</h2>
+                <img src="/Paw'nHoof.png" alt="Paw'nHoof" className="footer-logo-img" onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'block';
+                }} />
+                <h2 className="footer-brand-text" style={{display: 'none'}}>Paw'nHoof..</h2>
               </div>
               <div className="social-icons">
                 <i className="fab fa-instagram"></i>
