@@ -514,11 +514,47 @@
 
         .location-tag {
             background: var(--pastel-green);
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             margin-bottom: 10px;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        /* Map & card location buttons */
+        .btn-location {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            border: none;
+            box-shadow: 0 3px 10px rgba(17, 153, 142, 0.3);
+        }
+
+        .btn-location:hover {
+            background: linear-gradient(135deg, #0d7a70, #2dd65f);
+        }
+
+        .reset-location-btn {
+            margin-left: 10px;
+            background: rgba(17, 153, 142, 0.1);
+            border: none;
+            border-radius: 999px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #11998e;
+            transition: all 0.3s ease;
+        }
+
+        .reset-location-btn:hover {
+            background: rgba(17, 153, 142, 0.2);
+            transform: scale(1.05);
         }
 
         /* Widget Buttons */
@@ -589,9 +625,17 @@
             font-size: 0.9rem;
         }
         .btn-heart:hover {
+            background-color: #f8d5dd;
+            color: #e91e63;
+            border-color: #e91e63;
+        }
+        .btn-heart.active {
             background-color: #e91e63;
             color: white;
             border-color: #e91e63;
+        }
+        .btn-heart.active:hover {
+            background-color: #d81b60;
         }
         /* Heartbeat animation on hover */
         .btn-heart:hover i {
