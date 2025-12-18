@@ -475,6 +475,10 @@
             padding: 15px;
         }
 
+        .pet-details {
+            position: relative;
+        }
+
         /* CSS Made Icons (Representational) */
         .css-icon {
             font-size: 5rem;
@@ -532,7 +536,7 @@
             order: 1;
         }
 
-        .card-actions .btn-heart-open {
+        .card-actions .btn-heart {
             order: 2;
         }
 
@@ -569,71 +573,36 @@
             background: var(--accent);
         }
 
-        /* Open Style Like Button */
-        .btn-heart-open {
-            width: auto;
-            height: 38px;
-            padding: 0 14px;
+        /* Like Button with Font Awesome */
+        .btn-heart {
+            background-color: #ffeef0;
+            color: #e91e63;
+            border: 1px solid #ffcdd2;
+            padding: 8px 16px;
             border-radius: 20px;
-            background: rgba(0, 0, 0, 0.05);
-            border: 2px solid rgba(0, 0, 0, 0.2);
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            justify-content: center;
-            position: relative;
+            gap: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .btn-heart:hover {
+            background-color: #e91e63;
+            color: white;
+            border-color: #e91e63;
+        }
+        /* Heartbeat animation on hover */
+        .btn-heart:hover i {
+            animation: heartbeat 1s infinite;
         }
 
-        .btn-heart-open:hover {
-            background: rgba(0, 0, 0, 0.08);
-            border-color: rgba(0, 0, 0, 0.3);
-            transform: scale(1.05);
-        }
-
-        .btn-heart-open.active {
-            background: linear-gradient(135deg, #d81b60 0%, #c2185b 100%);
-            border-color: #d81b60;
-        }
-
-        .btn-heart-open.active:hover {
-            background: linear-gradient(135deg, #c2185b 0%, #ad1457 100%);
-            transform: scale(1.05);
-        }
-
-        .heart-icon-open {
-            width: 18px;
-            height: 16px;
-            position: relative;
-            display: inline-block;
-        }
-
-        .heart-icon-open::before,
-        .heart-icon-open::after {
-            content: '';
-            position: absolute;
-            width: 9px;
-            height: 14px;
-            border-radius: 9px 9px 0 0;
-        }
-
-        .btn-heart-open .heart-icon-open::before {
-            left: 0;
-            background: #000;
-            transform: rotate(-45deg);
-            transform-origin: 0 100%;
-        }
-
-        .btn-heart-open .heart-icon-open::after {
-            right: 0;
-            background: #000;
-            transform: rotate(45deg);
-            transform-origin: 100% 100%;
-        }
-
-        .btn-heart-open.active .heart-icon-open::before,
-        .btn-heart-open.active .heart-icon-open::after {
-            background: white;
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
         }
 
         /* --- 5. FLOATING TOOLS (From Style.css) --- */
@@ -803,6 +772,15 @@
             transition: 0.3s;
         }
         .float-btn:hover { background: var(--accent); transform: scale(1.1); }
+
+        /* --- Settings Button --- */
+        .btn-setting {
+            background-color: #4a5568;
+        }
+        .btn-setting:hover i {
+            transform: rotate(90deg);
+            transition: transform 0.5s ease;
+        }
         
         .main-toggle { z-index: 2001; transform: rotate(0deg); transition: 0.3s; }
         .main-toggle.active { transform: rotate(45deg); background: var(--accent); }
@@ -1372,10 +1350,11 @@
             50% { transform: translateY(-5px); }
         }
 
-        .btn-medical, .btn-donate {
-            background: var(--pastel-blue);
-            color: var(--primary);
-            border: 1.5px solid var(--pastel-blue);
+        /* --- Donate Button --- */
+        .btn-donate {
+            background: linear-gradient(135deg, #f09819, #edde5d);
+            color: #5a4a00; /* Dark text for contrast on yellow */
+            border: none;
             padding: 8px 14px;
             border-radius: 18px;
             cursor: pointer;
@@ -1390,12 +1369,39 @@
             justify-content: center;
         }
 
-        .btn-medical:hover, .btn-donate:hover {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
+        .btn-donate:hover {
+            background: linear-gradient(135deg, #e0890f, #e6d44d);
             transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(45, 74, 62, 0.2);
+            box-shadow: 0 4px 10px rgba(240, 152, 25, 0.3);
+        }
+        
+        /* --- Medical / Health Button --- */
+        .btn-medical {
+            background: white;
+            color: #007bff;
+            border: 2px solid #007bff;
+            padding: 8px 14px;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            flex: 1;
+            min-width: 100px;
+            justify-content: center;
+        }
+        .btn-medical:hover {
+            background: #007bff;
+            color: white;
+        }
+        .btn-medical i {
+            color: #ff3d3d; /* Red cross usually */
+        }
+        .btn-medical:hover i {
+            color: white;
         }
 
         .view-location-btn {
@@ -1514,7 +1520,8 @@
 
         .facebook-icon {
             background: #1877f2;
-            border-radius: 4px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(24, 119, 242, 0.3);
         }
 
         .facebook-icon::after {
@@ -1534,8 +1541,9 @@
             width: 22px;
             height: 22px;
             position: relative;
-            border-radius: 2px;
+            border-radius: 4px;
             overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .google-icon::before {
@@ -1556,7 +1564,7 @@
             width: 11px;
             height: 11px;
             background: #ea4335;
-            border-radius: 0 2px 0 0;
+            border-radius: 0 4px 0 0;
         }
 
         .google-btn {
@@ -1597,6 +1605,7 @@
             background: #000;
             border-radius: 15% 15% 15% 15% / 20% 20% 20% 20%;
             position: relative;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .apple-icon::before {
@@ -1630,6 +1639,8 @@
             height: 22px;
             position: relative;
             background: transparent;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .microsoft-icon::before {
@@ -1640,7 +1651,7 @@
             width: 10px;
             height: 10px;
             background: #f25022;
-            border-radius: 2px 0 0 0;
+            border-radius: 4px 0 0 0;
         }
 
         .microsoft-icon::after {
@@ -1651,7 +1662,7 @@
             width: 10px;
             height: 10px;
             background: #7fba00;
-            border-radius: 0 2px 0 0;
+            border-radius: 0 4px 0 0;
         }
 
         .microsoft-btn {
@@ -1691,21 +1702,20 @@
             justify-content: center;
             gap: 10px;
             padding: 12px 18px;
-            border: 2px solid rgba(0, 0, 0, 0.08);
+            border: none;
             border-radius: 12px;
             background: white;
+            color: white;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 600;
             font-size: 0.9rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .social-btn:hover {
-            border-color: var(--primary);
             transform: translateY(-3px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
         }
 
         .social-login {
@@ -1713,6 +1723,48 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
+        }
+
+        /* --- Social Media & Brands --- */
+
+        /* Google */
+        .btn-google {
+            background-color: #ffffff;
+            color: #757575;
+            border: 1px solid #dadce0;
+        }
+        .btn-google i {
+            background: conic-gradient(from -45deg, #ea4335 110deg, #4285f4 90deg 180deg, #34a853 180deg 270deg, #fbbc05 270deg) 73% 55%/150% 150% no-repeat;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn-google:hover {
+            background-color: #f8f9fa;
+            border-color: #d2e3fc;
+        }
+
+        /* Facebook */
+        .btn-facebook {
+            background-color: #1877F2;
+        }
+        .btn-facebook:hover {
+            background-color: #166fe5;
+        }
+
+        /* Apple */
+        .btn-apple {
+            background-color: #000000;
+        }
+        .btn-apple:hover {
+            background-color: #333333;
+        }
+
+        /* Microsoft */
+        .btn-microsoft {
+            background-color: #2f2f2f; /* Dark theme */
+            border: 1px solid #555;
         }
 
         /* Map Expand */
